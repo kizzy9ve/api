@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Item</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    a {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: black;
+    }
+    a:visited {
+      color: green;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <a href="lista.html">⬅ Voltar para a lista</a>
+  <h1>Detalhes do Item</h1>
+  <div id="detalhes"></div>
+
+  <script>
+    const detalhesContainer = document.getElementById("detalhes");
+
+    // pegar id do url
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    if (!id) {
+      detalhesContainer.innerHTML = "<p>Nenhum ID informado.</p>";
+    } else {
+      fetch(`https://api.restful-api.dev/objects/${id}`)
+        .then(res => res.json())
+        .then(item => {
+          // Exibe o item completo em JSON formatado
+          detalhesContainer.innerHTML = `<pre>${JSON.stringify(item, null, 3)}</pre>`;
+        })
+        .catch(err => {
+          detalhesContainer.innerHTML = "<p>Erro ao carregar os detalhes.</p>";
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html

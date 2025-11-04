@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Itens</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    a {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: black;
+    }
+    a:hover {
+      color: red;
+    }
+    a:visited {
+      color: green;
+    }
+    a:visited:hover {
+      color: blue;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lista de Objetos</h1>
+  <ul id="containerlista"></ul>
+
+  <script>
+    const container = document.getElementById("containerlista");
+
+    fetch('https://api.restful-api.dev/objects')
+      .then(res => res.json())
+      .then(json => {
+        json.forEach((item, indice) => {
+          const li = document.createElement("li");
+
+          // Link para a página de detalhes
+          const link = document.createElement("a");
+          link.href = `detalhe.html?id=${item.id}`;
+          link.textContent = `#${indice + 1} - ID: ${item.id}, Nome: ${item.name}`;
+
+          li.appendChild(link);
+          container.appendChild(li);
+        });
+      })
+      .catch(err => console.error("Erro ao carregar lista:", err));
+  </script>
+</body>
+</html>
