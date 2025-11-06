@@ -1,0 +1,81 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo do body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    line-height: 1.5;
+}
+
+/* Título */
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Lista principal */
+ul#containerlista {
+    list-style: none; /* remove bullets */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Itens da lista */
+ul#containerlista li {
+    margin: 0;
+    padding: 0;
+}
+
+/* Links dentro da lista */
+ul#containerlista li a {
+    display: block;
+    padding: 8px 12px;
+    margin: 0;
+    text-decoration: none;
+    color: #333;             /* cor padrão */
+    transition: color 0.2s;
+}
+
+/* Hover azul */
+ul#containerlista li a:hover {
+    color: #003d99;
+}
+
+/* Mensagens de carregando ou erro */
+.carregando, .erro {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 20px 0;
+}
+
+/* Cor de carregando */
+.carregando {
+    color: #003d99;
+}
+
+/* Cor de erro */
+.erro {
+    color: #cc0000;
+}
+
+/* Detalhes do item */
+.item-detalhes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Dados da API */
+.data {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0;
+}

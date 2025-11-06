@@ -1,31 +1,30 @@
 const container = document.getElementById("containerlista");
 
-//Forma antiga de chamar uma API
-// var xhr = new XMLHttpRequest();
-// var requestUrl = "https://api.restful-api.dev/objects";
-// xhr.open("GET", requestUrl, true);
-// xhr.onload = function () {
-//       var json = JSON.parse(xhr.responseText);
-//       exibeElementosNaTela(json);
-// }
-// xhr.send();
-
-//Forma moderna de chamar uma API
-// Fazemos a requisição para a API
+// Faz a requisição para a API
 fetch('https://api.restful-api.dev/objects')
-      .then(response => response.json()) // converte a resposta em JSON
-      .then(json => exibeElementosNaTela(json))
+  .then(response => response.json())
+  .then(json => {
+    // Se o json não for um array, tenta pegar json.data
+    const lista = Array.isArray(json) ? json : json.data;
 
-function exibeElementosNaTela(json) {
-      // Loop com forEach para percorrer cada item
-      json.forEach((item, indice) => {
-            // Criamos um <li> para cada item
-            const li = document.createElement("li");
+    if (!lista || !lista.length) {
+      container.innerHTML = "<li>Nenhum dado disponível.</li>";
+      return;
+    }
 
-            // Definimos o conteúdo do <li>
-            li.textContent = `#${indice + 1} - ID: ${item.id}, Nome: ${item.name}`;
+    lista.forEach((item, indice) => {
+      const li = document.createElement("li");
 
-            // Adicionamos o <li> no container da lista
-            container.appendChild(li);
-      });
-}
+      // Criamos o link que leva à página detalhe.html com o ID como parâmetro
+      const link = document.createElement("a");
+      link.href = `detalhe.html?id=${item.id}`;
+      link.textContent = `#${indice + 1} - ID: ${item.id}, Nome: ${item.name}`;
+
+      li.appendChild(link);
+      container.appendChild(li);
+    });
+  })
+  .catch(err => {
+    console.error("Erro ao carregar lista:", err);
+    container.innerHTML = "<li>Erro ao carregar a lista.</li>";
+  });

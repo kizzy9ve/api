@@ -4,61 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lista de Itens</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    h1 {
-      color: #333;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    li {
-      margin-bottom: 10px;
-    }
-    a {
-      display: block;
-      padding: 10px;
-      background: #f5f5f5;
-      border-radius: 6px;
-      text-decoration: none;
-      color: #333;
-      transition: background 0.2s;
-    }
-    a:hover {
-      background: #dfe6f0;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Lista de Objetos</h1>
-  <ul id="containerlista"></ul>
+  <ul id="containerlista">
+    <li id="carregando" class="carregando">Carregando...</li>
+  </ul>
 
   <script>
     const container = document.getElementById("containerlista");
+    const carregando = document.getElementById("carregando");
 
-    // Faz a requisição para a API
     fetch('https://api.restful-api.dev/objects')
       .then(response => response.json())
-      .then(json => exibeElementosNaTela(json))
-      .catch(err => console.error("Erro ao carregar lista:", err));
+      .then(json => {
+        if (carregando) carregando.remove();
 
-    function exibeElementosNaTela(json) {
-      json.forEach((item, indice) => {
-        const li = document.createElement("li");
-
-        // Criamos o link que leva à página detalhe.html com o ID como parâmetro
-        const link = document.createElement("a");
-        link.href = `detalhe.html?id=${item.id}`;
-        link.textContent = `#${indice + 1} - ID: ${item.id}, Nome: ${item.name}`;
-
-        li.appendChild(link);
-        container.appendChild(li);
+        json.forEach((item, indice) => {
+          const li = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = `detalhe.html?id=${item.id}`;
+          link.textContent = `#${indice + 1} - ID: ${item.id}, Nome: ${item.name}`;
+          li.appendChild(link);
+          container.appendChild(li);
+        });
+      })
+      .catch(err => {
+        console.error("Erro ao carregar lista:", err);
+        if (carregando) {
+          carregando.textContent = "Erro ao carregar a lista. Tente novamente mais tarde.";
+          carregando.classList.add("erro");
+        }
       });
-    }
   </script>
 </body>
 </html>

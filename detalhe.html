@@ -4,54 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalhes do Item</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    a {
-      display: inline-block;
-      margin-bottom: 20px;
-      text-decoration: none;
-      color: black;
-    }
-    a:visited {
-      color: green;
-    }
-    pre {
-      background-color: #f5f5f5;
-      padding: 15px;
-      border-radius: 6px;
-      overflow-x: auto;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <a href="lista.html">⬅ Voltar para a lista</a>
+  <a href="index.html">⬅ Voltar para a lista</a>
   <h1>Detalhes do Item</h1>
-  <div id="detalhes"></div>
+  <div id="detalhes">
+    <p id="carregando" class="carregando">Carregando detalhes...</p>
+  </div>
 
   <script>
-    const detalhesContainer = document.getElementById("detalhes");
+    document.addEventListener("DOMContentLoaded", () => {
+      const detalhesContainer = document.getElementById("detalhes");
+      const carregando = document.getElementById("carregando");
 
-    // pegar id do url
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
 
-    if (!id) {
-      detalhesContainer.innerHTML = "<p>Nenhum ID informado.</p>";
-    } else {
+      if (!id) {
+        if (carregando) carregando.remove();
+        detalhesContainer.innerHTML = "<p>Nenhum ID informado.</p>";
+        return;
+      }
+
       fetch(`https://api.restful-api.dev/objects/${id}`)
         .then(res => res.json())
         .then(item => {
-          // Exibe o item completo em JSON formatado
-          detalhesContainer.innerHTML = `<pre>${JSON.stringify(item, null, 3)}</pre>`;
+          if (carregando) carregando.remove();
+
+          const { id, name, data } = item;
+          let html = `<div class="item-detalhes">`;
+          html += `<div><strong>ID:</strong> ${id}</div>`;
+          html += `<div><strong>Nome:</strong> ${name}</div>`;
+
+          if (data) {
+            html += `<div><strong>Data:</strong></div><div class="data">`;
+            for (const chave in data) {
+              html += `<div>${chave}: ${data[chave]}</div>`;
+            }
+            html += `</div>`;
+          }
+
+          html += `</div>`;
+          detalhesContainer.innerHTML = html;
         })
         .catch(err => {
-          detalhesContainer.innerHTML = "<p>Erro ao carregar os detalhes.</p>";
-          console.error(err);
+          console.error("Erro ao carregar detalhes:", err);
+          if (carregando) {
+            carregando.textContent = "Erro ao carregar os detalhes. Tente novamente mais tarde.";
+            carregando.classList.add("erro");
+          }
         });
-    }
+    });
   </script>
 </body>
-</html
+</html>
