@@ -20,7 +20,8 @@ h1 {
 
 /* Lista principal */
 ul#containerlista {
-    list-style: none; /* remove bullets */
+    list-style: none;
+    /* remove bullets */
     margin: 0;
     padding: 0;
     display: flex;
@@ -39,7 +40,8 @@ ul#containerlista li a {
     padding: 8px 12px;
     margin: 0;
     text-decoration: none;
-    color: #333;             /* cor padrão */
+    color: #333;
+    /* cor padrão */
     transition: color 0.2s;
 }
 
@@ -49,7 +51,8 @@ ul#containerlista li a:hover {
 }
 
 /* Mensagens de carregando ou erro */
-.carregando, .erro {
+.carregando,
+.erro {
     text-align: center;
     font-weight: bold;
     font-size: 1.1em;

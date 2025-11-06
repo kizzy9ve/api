@@ -1,61 +1,117 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Detalhes do Item</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <!-- 
+        Meta tag para responsividade:
+        - width=device-width: define a largura da viewport igual à largura da tela do dispositivo
+        - initial-scale=1.0: define o zoom inicial como 100%
+        Por que usar: garante que o layout se adapte a celulares, tablets e desktops.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Item</title> <!-- Título da aba do navegador -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 </head>
 <body>
-  <a href="index.html">⬅ Voltar para a lista</a>
-  <h1>Detalhes do Item</h1>
-  <div id="detalhes">
-    <p id="carregando" class="carregando">Carregando detalhes...</p>
-  </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const detalhesContainer = document.getElementById("detalhes");
-      const carregando = document.getElementById("carregando");
+    <!-- Link de navegação para voltar à lista de itens -->
+    <a href="index.html">⬅ Voltar para a lista</a>
 
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
+    <!-- Título principal da página -->
+    <h1>Detalhes do Item</h1>
 
-      if (!id) {
-        if (carregando) carregando.remove();
-        detalhesContainer.innerHTML = "<p>Nenhum ID informado.</p>";
-        return;
-      }
+    <!-- Container onde os detalhes do item serão exibidos -->
+    <div id="detalhes">
+        <!-- Mensagem inicial enquanto os dados são carregados -->
+        <p class="carregando">
+            <i class="fa fa-spin fa-spinner fa-3x" aria-hidden="true"></i> Carregando detalhes...
+        </p>
 
-      fetch(`https://api.restful-api.dev/objects/${id}`)
-        .then(res => res.json())
-        .then(item => {
-          if (carregando) carregando.remove();
+        <div>a: 1</div><div>b: 2</div><div>c: 3</div>
+    </div>
 
-          const { id, name, data } = item;
-          let html = `<div class="item-detalhes">`;
-          html += `<div><strong>ID:</strong> ${id}</div>`;
-          html += `<div><strong>Nome:</strong> ${name}</div>`;
+    <script>
+        /*
+            Script enxuto e moderno para carregar detalhes do item via API.
+            Técnicas utilizadas:
+            1. IIFE assíncrona (Immediately Invoked Function Expression) para rodar o script imediatamente
+            2. Async/Await para tornar o código linear e fácil de entender
+            3. Helper $() para simplificar document.getElementById
+            4. URLSearchParams para ler parâmetros da URL de forma segura
+            5. Validação do ID para evitar requisições desnecessárias
+            6. Template literals + Object.entries() para gerar HTML dinâmico
+            7. textContent vs innerHTML para segurança e renderização correta
+        */
+        (async () => {
+            // Helper rápido para pegar elementos por ID
+            // Por que usar: reduz repetição de código e melhora legibilidade
+            const $ = id => document.getElementById(id);
 
-          if (data) {
-            html += `<div><strong>Data:</strong></div><div class="data">`;
-            for (const chave in data) {
-              html += `<div>${chave}: ${data[chave]}</div>`;
+            // Container principal onde os detalhes serão inseridos
+            const box = $("detalhes");
+
+            // Obtém o parâmetro "id" da URL (query string)
+            // URLSearchParams é moderno e seguro, evita parse manual de location.search
+            const id = new URLSearchParams(location.search).get("id");
+
+            // Validação do ID
+            // Por que usar: evita fazer requisição à API sem necessidade e fornece feedback imediato
+            if (!id) {
+                // textContent usado para textos simples (mais seguro que innerHTML)
+                box.textContent = "Nenhum ID informado.";
+                // Aplica classe de erro para estilização visual via CSS
+                box.classList.add("erro");
+                return; // interrompe a execução do script
             }
-            html += `</div>`;
-          }
 
-          html += `</div>`;
-          detalhesContainer.innerHTML = html;
-        })
-        .catch(err => {
-          console.error("Erro ao carregar detalhes:", err);
-          if (carregando) {
-            carregando.textContent = "Erro ao carregar os detalhes. Tente novamente mais tarde.";
-            carregando.classList.add("erro");
-          }
-        });
-    });
-  </script>
+            try {
+                // Faz requisição à API usando fetch moderno
+                // Async/Await mantém o código linear e legível
+                const response = await fetch(`https://api.restful-api.dev/objects/${id}`);
+
+                // Verifica se a resposta HTTP foi bem-sucedida
+                // Por que usar: evita processar JSON de respostas inválidas
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+                // Converte resposta JSON em objeto JavaScript
+                // Desestruturação extrai apenas os campos que precisamos
+                // itemData garante que "data" seja sempre um objeto (evita erros)
+                const { id: itemId, name, data } = await response.json();
+                const itemData = (data && typeof data === "object") ? data : {};
+
+                // Monta o HTML dinamicamente
+                // ID e Nome sempre aparecem
+                // Se houver dados, percorre cada chave/valor
+                // Template literals + Object.entries() permitem gerar HTML conciso e legível
+                box.innerHTML = `
+                    <div class="item-detalhes">
+                        <div><b>ID:</b> ${itemId}</div>
+                        <div><b>Nome:</b> ${name}</div
+                        <div class="data">
+                            <b>Data:</b>
+                            ${
+                                Object.keys(itemData).length > 0
+                                ? Object.entries(itemData)
+                                    .map(([key, value]) => `<div>${key}: ${value}</div>`)
+                                    .join("")
+                                : "<div>Nenhuma informação adicional</div>"
+                            }
+                        </div>
+                    </div>
+                `;
+                // Por que usar innerHTML: necessário para inserir múltiplas linhas de HTML dinâmico
+                // textContent não permitiria gerar múltiplas divs para cada informação
+
+            } catch (err) {
+                // Captura erros de rede ou de parsing JSON
+                console.error("Erro ao carregar detalhes:", err);
+                // Mostra mensagem amigável para o usuário
+                box.textContent = "Erro ao carregar os detalhes.";
+                box.classList.add("erro");
+                // Por que usar: mantém feedback visual consistente mesmo em caso de falha
+            }
+        })(); // IIFE assíncrona executa imediatamente
+    </script>
+
 </body>
 </html>
