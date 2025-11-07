@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro de Produto</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <main class="container" id="container">
+    <h1>Product</h1>
+
+    <form id="form-produto">
+      <div class="campo">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Ex: Notebook Dell" required />
+      </div>
+
+      <div class="campo-duplo">
+        <div class="campo">
+          <label for="year">Year</label>
+          <input type="number" id="year" min="1990" max="2025" required />
+        </div>
+        <div class="campo">
+          <label for="price">Price (R$)</label>
+          <input type="number" id="price" min="0" step="0.01" required />
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="cpu">CPU Model</label>
+        <input type="text" id="cpu" placeholder="Ex: Intel i7" required />
+      </div>
+
+      <div class="campo">
+        <label for="disk">Hard disk size</label>
+        <input type="text" id="disk" placeholder="Ex: 1 TB SSD" required />
+      </div>
+
+      <div class="campo">
+        Escolha uma opção:
+        <input type="radio" name="opcao" value="1" placeholder="radio" />Opção 1
+        <input type="radio" name="opcao" value="2" placeholder="radio" />Opção 2
+        <input type="radio" name="opcao" value="3" placeholder="radio" />Opção 3
+
+        <hr>
+        Escolha as opções:
+        <input type="checkbox" name="check" value="1" placeholder="checkbox" />
+        <input type="checkbox" name="check" value="2" placeholder="checkbox" />
+        <input type="checkbox" name="check" value="3" placeholder="checkbox" />
+
+        Campo Select
+        <select name="opcaoSelect" id="opcaoSelect">
+          <option value="1">Opção 1</option>
+          <option value="2">Opção 2</option>
+          <option value="3">Opção 3</option>
+        </select>
+      </div>
+
+      <button type="submit" id="botao-enviar">send</button>
+    </form>
+  </main>
+
+  <!-- MENSAGEM DE SUCESSO (ESCONDIDA) -->
+  <div id="overlay" class="overlay">
+    <div class="mensagem-central">
+      <h2>✅ Envio realizado com sucesso!</h2>
+      <p>Seus dados foram enviados com êxito.</p>
+      <button id="btn-voltar">Voltar</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

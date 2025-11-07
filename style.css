@@ -1,56 +1,58 @@
-/* Reset básico */
+
+/*
+/* Reset básico 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Estilo do body */
+/* Estilo do body 
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
     line-height: 1.5;
 }
 
-/* Título */
+/* Título 
 h1 {
     color: #333;
     margin-bottom: 10px;
 }
 
-/* Lista principal */
+/* Lista principal 
 ul#containerlista {
     list-style: none;
-    /* remove bullets */
+    /* remove bullets 
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
 }
 
-/* Itens da lista */
+/* Itens da lista 
 ul#containerlista li {
     margin: 0;
     padding: 0;
 }
 
-/* Links dentro da lista */
+/* Links dentro da lista 
 ul#containerlista li a {
     display: block;
     padding: 8px 12px;
     margin: 0;
     text-decoration: none;
     color: #333;
-    /* cor padrão */
+    /* cor padrão 
     transition: color 0.2s;
 }
 
-/* Hover azul */
+/* Hover azul 
 ul#containerlista li a:hover {
     color: #003d99;
 }
 
-/* Mensagens de carregando ou erro */
+/* Mensagens de carregando ou erro 
 .carregando,
 .erro {
     text-align: center;
@@ -59,26 +61,232 @@ ul#containerlista li a:hover {
     margin: 20px 0;
 }
 
-/* Cor de carregando */
+/* Cor de carregando 
 .carregando {
     color: #003d99;
 }
 
-/* Cor de erro */
+/* Cor de erro 
 .erro {
     color: #cc0000;
 }
 
-/* Detalhes do item */
+/* Detalhes do item 
 .item-detalhes {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-/* Dados da API */
+/* Dados da API 
 .data {
     display: flex;
     flex-direction: column;
     margin-left: 0;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 450px;
+  margin: 60px auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.campo-duplo {
+  display: flex;
+  gap: 1rem;
+}
+
+button {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Overlay 
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: none; /* começa invisível 
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.mensagem-central {
+  background: #fff;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f4f6f8;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- FORMULÁRIO ---------- */
+.container {
+  max-width: 450px;
+  margin: 60px auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.4s ease;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2b2d42;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.campo label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.campo input {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.campo input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(255, 0, 21, 0.822);
+  outline: none;
+}
+
+.campo-duplo {
+  display: flex;
+  gap: 1rem;
+}
+
+/* ---------- BOTÃO ---------- */
+button {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* ---------- OVERLAY ---------- */
+.overlay {
+  display: none; /* começa invisível */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.overlay.mostrar {
+  display: flex;
+  opacity: 1;
+}
+
+.mensagem-central {
+  background: #fff;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  animation: aparecer 0.5s ease forwards;
+}
+
+.mensagem-central h2 {
+  color: #28a745;
+  margin-bottom: 0.5rem;
+}
+
+.mensagem-central p {
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.mensagem-central button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mensagem-central button:hover {
+  background-color: #0056b3;
+}
+
+@keyframes aparecer {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
