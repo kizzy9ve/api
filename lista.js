@@ -1,30 +1,59 @@
-const container = document.getElementById("containerlista");
+const corpoTabela = document.getElementById("corpoTabela");
 
-// Faz a requisição para a API
 fetch('https://api.restful-api.dev/objects')
-    .then(response => response.json())
-    .then(json => {
-        // Se o json não for um array, tenta pegar json.data
-        const lista = Array.isArray(json) ? json : json.data;
+  .then(res => res.json())
+  .then(lista => {
+    corpoTabela.innerHTML = "";
 
-        if (!lista || !lista.length) {
-            container.innerHTML = "<li>Nenhum dado disponível.</li>";
-            return;
-        }
+    if (!Array.isArray(lista) || !lista.length) {
+      corpoTabela.innerHTML = `<tr><td colspan="4" style="text-align:center;">Nenhum dado disponível.</td></tr>`;
+      return;
+    }
 
-        lista.forEach((item, indice) => {
-            const li = document.createElement("li");
-
-            // Criamos o link que leva à página detalhe.html com o ID como parâmetro
-            const link = document.createElement("a");
-            link.href = `detalhe.html?id=${item.id}`;
-            link.textContent = `#${indice + 1} - ID: ${item.id}, Nome: ${item.name}`;
-
-            li.appendChild(link);
-            container.appendChild(li);
-        });
-    })
-    .catch(err => {
-        console.error("Erro ao carregar lista:", err);
-        container.innerHTML = "<li>Erro ao carregar a lista.</li>";
+    lista.slice(0, 10).forEach((item, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${item.name}</td>
+        <td class="acao">
+          <a href="editar.html?id=${item.id}" title="Editar">
+            <i class="fa-solid fa-pen-to-square editar"></i>
+          </a>
+        </td>
+        <td class="acao">
+          <button class="btn-excluir" title="Deletar" data-id="${item.id}">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      `;
+      corpoTabela.appendChild(tr);
     });
+
+    // Ações de exclusão
+    document.querySelectorAll(".btn-excluir").forEach(btn => {
+      btn.addEventListener("click", async e => {
+        const id = e.currentTarget.getAttribute("data-id");
+        const confirmar = confirm("Deseja realmente excluir este item?");
+
+        if (!confirmar) return;
+
+        try {
+          const response = await fetch(`https://api.restful-api.dev/objects/${id}`, {
+            method: "DELETE"
+          });
+
+          if (!response.ok) throw new Error("Falha ao excluir");
+
+          e.currentTarget.closest("tr").remove();
+          alert("Item excluído com sucesso!");
+        } catch (err) {
+          console.error(err);
+          alert("Erro ao excluir o item.");
+        }
+      });
+    });
+  })
+  .catch(err => {
+    console.error("Erro ao carregar lista:", err);
+    corpoTabela.innerHTML = `<tr><td colspan="4" style="text-align:center;color:red;">Erro ao carregar a lista.</td></tr>`;
+  });

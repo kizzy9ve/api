@@ -1,17 +1,183 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Itens</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista de Notebooks</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #ffffff;
+    }
+
+    /* Área da lista de notebooks */
+    .title-area {
+        background-color: #d9d9d9; /* cinza claro */
+        text-align: center;
+        font-weight: bold;
+        font-size: 20px;
+        padding: 10px 0;
+    }
+
+    /* Área Dados e Ações */
+    .top-area {
+        display: flex;
+        width: 100%;
+        margin: 0;
+    }
+
+    .top-box {
+        background-color: #ffffff;
+        text-align: center;
+        font-weight: bold;
+        padding: 10px 0;
+        flex: 1;
+        border: 1px solid #d9d9d9;
+        border-left: 0;
+        box-sizing: border-box;
+        margin: 0;
+    }
+
+    .top-box:first-child {
+        border-left: 1px solid #d9d9d9;
+    }
+
+    /* Tabela de notebooks */
+    .notebook-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .notebook-table th, .notebook-table td {
+        border: 1px solid #d9d9d9;
+        padding: 6px;
+        text-align: center;
+        margin: 0;
+    }
+
+    .notebook-table th {
+        background-color: #d9d9d9; /* cabeçalho cinza claro */
+        font-weight: bold;
+    }
+
+    .notebook-table tbody tr:nth-child(odd) {
+        background-color: #ffffff; /* branco */
+    }
+
+    .notebook-table tbody tr:nth-child(even) {
+        background-color: #f2f2f2; /* cinza claro alternado */
+    }
+
+    .icon {
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-
 <body>
-    <h1>Lista de Objetos</h1>
-    <ul id="containerlista"></ul>
-    <script src="lista.js"></script>
-</body>
 
+<div class="container">
+    <div class="title-area">Lista de Notebooks</div>
+
+    <div class="top-area">
+        <div class="top-box">Dados</div>
+        <div class="top-box">Ações</div>
+    </div>
+
+    <table class="notebook-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Marca</th>
+                <th>Processador</th>
+                <th>RAM</th>
+                <th>Editar</th>
+                <th>Deletar</th>
+            </tr>
+        </thead>
+        <tbody id="containerlista">
+            <!-- Dados da API serão inseridos aqui -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+const container = document.getElementById("containerlista");
+
+fetch('https://api.restful-api.dev/objects')
+.then(response => response.json())
+.then(json => {
+    const lista = Array.isArray(json) ? json : json.data;
+    if (!lista || !lista.length) {
+        container.innerHTML = "<tr><td colspan='7'>Nenhum dado disponível.</td></tr>";
+        return;
+    }
+
+    lista.forEach(item => {
+        const tr = document.createElement("tr");
+
+        const tdId = document.createElement("td");
+        tdId.textContent = item.id;
+        tr.appendChild(tdId);
+
+        const tdNome = document.createElement("td");
+        tdNome.textContent = item.name || "";
+        tr.appendChild(tdNome);
+
+        const tdMarca = document.createElement("td");
+        tdMarca.textContent = item.data?.marca || "";
+        tr.appendChild(tdMarca);
+
+        const tdProcessador = document.createElement("td");
+        tdProcessador.textContent = item.data?.processador || "";
+        tr.appendChild(tdProcessador);
+
+        const tdRAM = document.createElement("td");
+        tdRAM.textContent = item.data?.ram || "";
+        tr.appendChild(tdRAM);
+
+        const tdEditar = document.createElement("td");
+        const linkEditar = document.createElement("a");
+        linkEditar.href = `detalhe.html?id=${item.id}`;
+        linkEditar.innerHTML = `<i class="fa fa-pencil icon"></i>`;
+        tdEditar.appendChild(linkEditar);
+        tr.appendChild(tdEditar);
+
+        const tdDeletar = document.createElement("td");
+        tdDeletar.innerHTML = `<i class="fa fa-trash icon" onclick="deletarItem('${item.id}', this)"></i>`;
+        tr.appendChild(tdDeletar);
+
+        container.appendChild(tr);
+    });
+})
+.catch(err => {
+    console.error("Erro ao carregar lista:", err);
+    container.innerHTML = "<tr><td colspan='7'>Erro ao carregar a lista.</td></tr>";
+});
+
+function deletarItem(id, el) {
+    if (confirm("Deseja realmente excluir este item?")) {
+        fetch(`https://api.restful-api.dev/objects/${id}`, { method: 'DELETE' })
+        .then(response => {
+            if (response.ok) {
+                el.parentElement.parentElement.remove();
+            } else {
+                alert("Erro ao deletar item.");
+            }
+        });
+    }
+}
+</script>
+
+</body>
 </html>
